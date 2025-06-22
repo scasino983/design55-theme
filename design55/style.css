@@ -244,8 +244,8 @@ ul.menu { /* WP generates this class for the <ul> */
 
 .main-nav ul.menu li a:hover,
 .main-nav ul.menu li a:focus {
-  background: var(--accent-pink);
-  color: var(--bg-contrast);
+  /* background: var(--accent-pink);
+  color: var(--bg-contrast); */
 }
 
 .main-nav ul.menu li a:focus-visible { /* Improved focus style */
@@ -293,8 +293,8 @@ ul.menu { /* WP generates this class for the <ul> */
 ul.sub-menu {
   display: none; /* Hidden by default */
   position: absolute;
-  top: 100%; /* Position below parent */
-  left: 0;
+  top: 85%; /* Position below parent */
+  /* left: 0; */
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(8px);
   padding: 1rem;
@@ -311,6 +311,7 @@ ul.sub-menu {
   to { opacity: 1; transform: translateY(0); }
 }
 
+.sub-menu:hover,
 .menu-item-has-children:hover > ul.sub-menu,
 .menu-item-has-children:focus-within > ul.sub-menu {
   display: block;
@@ -990,4 +991,22 @@ ul.sub-menu li a {
     padding: 1.5rem var(--container-padding);
     font-size: 0.9rem;
   }
+}
+
+.menu-nav li a {
+    position: relative;
+    text-decoration: none;
+}
+.menu-nav li a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent-pink);
+    transition: width 0.3s ease-in-out;
+}
+.menu-nav li a:hover::after {
+    width: 100%;
 }

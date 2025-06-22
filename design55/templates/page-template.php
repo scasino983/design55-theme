@@ -5,7 +5,8 @@ Template Name: General Page (Info + Image)
 get_header(); ?>
 
 <main id="main-content" class="site-main"> <?php // Changed ID for skip link ?>
-    <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
+  <?php get_template_part('template-parts/hero'); ?>  
+<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
         <section class="info-image-section">
             <div class="info-image-container">
                 <div class="info-image-text">
