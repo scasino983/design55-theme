@@ -4,12 +4,31 @@ Template Name: General Page (Info + Image)
 */
 get_header(); ?>
 
-<main id="main-content" class="site-main"> <?php // Changed ID for skip link ?>
+<main id="main-content" class="site-main">
+
+    <section class="hero-section design55-page-hero">
+        <div class="hero-img-wrapper">
+            <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/livingroom.webp'); ?>" alt="<?php echo esc_attr(get_the_title()); // Use page title for alt if appropriate ?>" class="hero-img" />
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <?php the_title(); // Using the page's actual title for the hero ?>
+            </h1>
+            <div class="hero-subtitle">
+                <?php esc_html_e('Dynamic subtitle for this page.', 'design55'); // Placeholder Subtitle, consider using post_excerpt or a custom field ?>
+            </div>
+            <a href="#" class="btn"> <?php // Placeholder CTA ?>
+                <?php esc_html_e('Discover More', 'design55'); ?>
+            </a>
+        </div>
+    </section>
+
     <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
         <section class="info-image-section">
             <div class="info-image-container">
                 <div class="info-image-text">
-                    <h1 class="page-title"><?php the_title(); ?></h1>
+                    <?php // The H1 from this section is removed as the hero now serves as the primary title section for the page template ?>
                     <?php
                         if (get_the_content()) {
                             the_content();
