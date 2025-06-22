@@ -15,22 +15,31 @@ $hero_images = array(
 // Get hero image for this page if it exists
 $hero_image_url = isset($hero_images[$slug]) ? $hero_images[$slug] : '';
 
+// Prepare alt text
+$hero_alt_text = get_theme_mod('hero_title', __('Unforgettable Interiors for Modern Living', 'design55'));
+if (empty($hero_alt_text)) {
+    $hero_alt_text = get_bloginfo('name');
+}
+
 ?>
 <section class="hero-section" id="home">
     <?php if ($hero_image_url): ?>
         <div class="hero-img-wrapper">
-            <img src="<?php echo esc_url($hero_image_url); ?>" alt="" class="hero-img" />
+            <img src="<?php echo esc_url($hero_image_url); ?>" alt="<?php echo esc_attr($hero_alt_text); ?>" class="hero-img" />
             <div class="hero-overlay"></div>
         </div>
         <div class="hero-content">
             <h1 class="hero-title">
-                <?php echo get_theme_mod('hero_title', 'Unforgettable Interiors for Modern Living'); ?>
+                <?php
+                // Ensure theme_mod output is escaped if it can contain user-input HTML. For simple strings, esc_html is fine.
+                echo esc_html(get_theme_mod('hero_title', __('Unforgettable Interiors for Modern Living', 'design55')));
+                ?>
             </h1>
             <div class="hero-subtitle">
-                <?php echo get_theme_mod('hero_subtitle', 'Live Beautifully, Love Your Space'); ?>
+                <?php echo esc_html(get_theme_mod('hero_subtitle', __('Live Beautifully, Love Your Space', 'design55'))); ?>
             </div>
             <a href="#contact" class="btn">
-                Start Your Project
+                <?php esc_html_e('Start Your Project', 'design55'); ?>
             </a>
         </div>
     <?php endif; ?>

@@ -6,6 +6,8 @@
   <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
+<?php wp_body_open(); ?>
+<a class="skip-link screen-reader-text" href="#main-content"><?php esc_html_e( 'Skip to content', 'design55' ); ?></a>
   <header class="site-header">
     <div class="branding">
       <?php if ( has_custom_logo() ) : ?>
