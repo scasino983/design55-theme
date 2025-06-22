@@ -285,43 +285,50 @@ ul.menu { /* WP generates this class for the <ul> */
 
 /* Secondary Sticky-Scroll Menu (Desktop) */
 .secondary-sticky-nav {
-  display: none; /* Hidden by default, shown by JS */
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.95); /* Slightly opaque white */
+  transform: translateY(-120%); /* Start off-screen; 120% to ensure it's fully hidden if it has padding/border */
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   box-shadow: var(--shadow);
-  z-index: 998; /* Below main header dropdowns, above content */
+  z-index: 998;
   padding: 0.5rem 0;
   border-bottom: 1px solid var(--accent-pink);
+  /* display: none; by default is not needed if transform handles initial hiding */
 }
+
+.secondary-sticky-nav.secondary-menu--active { /* Renamed class for clarity with sliding behavior */
+  transform: translateY(0); /* Slide into view */
+}
+
+/* Styles for content within .secondary-sticky-nav remain largely the same */
 .secondary-sticky-nav .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 .secondary-sticky-nav .secondary-logo img.custom-logo {
-  max-height: 40px; /* Smaller logo */
+  max-height: 40px;
   width: auto;
 }
 .secondary-sticky-nav .secondary-logo .site-name-link {
-    font-size: 1.5rem; /* Smaller site name if no logo */
+    font-size: 1.5rem;
     color: var(--black-main);
     font-family: var(--font-serif);
     font-weight: 700;
 }
-
 .secondary-sticky-nav ul.a-secondary-menu {
   display: flex;
-  gap: 1rem; /* Adjust spacing */
+  gap: 1rem;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 .secondary-sticky-nav ul.a-secondary-menu li a {
-  font-size: 0.9rem; /* Smaller font size */
+  font-size: 0.9rem;
   font-family: var(--font-sans);
   color: var(--black-secondary);
   font-weight: 500;
@@ -335,10 +342,10 @@ ul.menu { /* WP generates this class for the <ul> */
 .secondary-sticky-nav ul.a-secondary-menu li a::after {
   content: '';
   position: absolute;
-  bottom: -1px; /* Ensure it's below padding */
+  bottom: -1px;
   left: 0;
   width: 0;
-  height: 1px; /* Thinner underline */
+  height: 1px;
   background-color: var(--accent-deep-pink);
   transition: width 0.3s ease-in-out;
 }
@@ -353,10 +360,7 @@ ul.menu { /* WP generates this class for the <ul> */
 .secondary-sticky-nav ul.a-secondary-menu li.current-menu-ancestor > a::after {
   width: 100%;
 }
-
-.secondary-sticky-nav--visible {
-  display: block; /* Show the menu */
-}
+/* .secondary-sticky-nav--visible class is now replaced by .secondary-menu--active */
 
 
 /* Mobile Menu Toggle Button (Hamburger) */

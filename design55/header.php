@@ -27,34 +27,7 @@
     </button>
   </header>
 
-<nav class="secondary-sticky-nav" aria-label="<?php esc_attr_e('Secondary Navigation', 'design55'); ?>">
-    <div class="container"> <?php // Using existing container class for alignment ?>
-        <div class="secondary-logo">
-            <?php
-            // Display a smaller version of the logo.
-            // This might involve a different custom logo size or a CSS scaled version of the main logo.
-            // For now, let's re-use the custom_logo if available, CSS will handle size.
-            if ( has_custom_logo() ) {
-                // We need a way to make it smaller.
-                // Option 1: Hope CSS handles it.
-                // Option 2: Add a filter to change logo output or use a specific smaller logo size if registered.
-                // For simplicity now, just outputting it.
-                the_custom_logo();
-            } else {
-                echo '<a href="' . esc_url(home_url('/')) . '" rel="home" class="site-name-link">' . esc_html(get_bloginfo('name')) . '</a>';
-            }
-            ?>
-        </div>
-        <?php
-            wp_nav_menu( array(
-                'theme_location' => 'main-menu',
-                'container' => false,
-                'menu_class' => 'menu a-secondary-menu', // Different class for potentially different styling
-                'depth' => 1 // Keep secondary menu simple, no dropdowns by default
-            ) );
-        ?>
-    </div>
-</nav>
+<?php get_template_part('template-parts/secondary-menu'); // Load the secondary menu template part ?>
 
 <div class="mobile-menu-panel" id="mobile-menu-panel" aria-hidden="true">
     <div class="mobile-menu-header">
