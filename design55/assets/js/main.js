@@ -11,12 +11,12 @@ jQuery(document).ready(function($) {
     function handleSecondaryNavVisibility() {
       if ($window.width() > 600) { // Only apply for desktop
         if ($window.scrollTop() > siteHeaderHeight) {
-          $secondaryStickyNav.addClass('secondary-sticky-nav--visible');
+          $secondaryStickyNav.addClass('secondary-menu--active'); // Use new class for slide animation
         } else {
-          $secondaryStickyNav.removeClass('secondary-sticky-nav--visible');
+          $secondaryStickyNav.removeClass('secondary-menu--active');
         }
       } else {
-        $secondaryStickyNav.removeClass('secondary-sticky-nav--visible'); // Ensure it's hidden on mobile
+        $secondaryStickyNav.removeClass('secondary-menu--active'); // Ensure it's hidden and transform reset on mobile
       }
     }
 
