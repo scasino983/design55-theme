@@ -4,6 +4,7 @@ Template Name: Contact
 */
 get_header(); ?>
 
+
 <main id="main-content" class="site-main">
 
     <section class="hero-section design55-page-hero">
@@ -18,6 +19,7 @@ get_header(); ?>
             </h1>
             <div class="hero-subtitle">
                 <?php esc_html_e("We're here to help and answer any question you might have.", 'design55'); // Placeholder Subtitle ?>
+
             </div>
             <a href="#" class="btn"> <?php // Placeholder CTA ?>
                 <?php esc_html_e('Learn More', 'design55'); ?>

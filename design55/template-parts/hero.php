@@ -6,9 +6,9 @@ $slug = is_front_page() ? 'home' : basename(get_permalink());
 $hero_images = array(
     'home'        => get_template_directory_uri() . '/assets/images/livingroom-kitchen.jpg',
     'about'       => get_template_directory_uri() . '/assets/images/livingroom-kitchen.jpg',
-    'contact'     => get_template_directory_uri() . '/assets/images/hero-contact.jpg',
-    'projects'    => get_template_directory_uri() . '/assets/images/hero-projects.jpg',
-    'testimonials'=> get_template_directory_uri() . '/assets/images/hero-testimonials.jpg',
+    'contact'     => get_template_directory_uri() . '/assets/images/livingroom-kitchen.jpg',
+    'projects'    => get_template_directory_uri() . '/assets/images/livingroom-kitchen.jpg',
+    'testimonials'=> get_template_directory_uri() . '/assets/images/livingroom-kitchen.jpg',
     // add more as needed
 );
 
