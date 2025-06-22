@@ -4,7 +4,6 @@ Template Name: General Page (Info + Image)
 */
 get_header(); ?>
 
-
 <main id="main-content" class="site-main">
 
     <section class="hero-section design55-page-hero">
@@ -26,7 +25,6 @@ get_header(); ?>
     </section>
 
     <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
-
         <section class="info-image-section">
             <div class="info-image-container">
                 <div class="info-image-text">

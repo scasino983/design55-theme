@@ -244,14 +244,41 @@ ul.menu { /* WP generates this class for the <ul> */
 
 .main-nav ul.menu li a:hover,
 .main-nav ul.menu li a:focus {
-  /* background: var(--accent-pink);
-  color: var(--bg-contrast); */
+  background: var(--accent-pink);
+  color: var(--bg-contrast);
 }
 
 .main-nav ul.menu li a:focus-visible { /* Improved focus style */
   outline: 2px solid var(--accent-deep-pink);
   outline-offset: 2px;
 }
+
+/* Menu item underline animation */
+.main-nav ul.menu li a {
+  position: relative; /* Needed for absolute positioning of pseudo-element */
+  text-decoration: none; /* Remove default underline if any */
+  overflow: hidden; /* Optional: hide underline if it extends beyond link bounds during animation */
+}
+
+.main-nav ul.menu li a::after {
+  content: '';
+  position: absolute;
+  bottom: 0; /* Position at the bottom of the link */
+  left: 0;
+  width: 0; /* Initially no width */
+  height: 2px; /* Height of the underline */
+  background-color: var(--accent-deep-pink); /* Color of the underline, matches hover text */
+  transition: width 0.3s ease-in-out; /* Animate width from left to right */
+}
+
+.main-nav ul.menu li a:hover::after,
+.main-nav ul.menu li a:focus::after,
+.main-nav ul.menu li.current-menu-item > a::after, /* Style for active page link */
+.main-nav ul.menu li.current-menu-ancestor > a::after { /* Style for parent of active page link */
+  width: 100%; /* Full width on hover/focus or if active */
+}
+/* End Menu item underline animation */
+
 
 /* 5.3 Sticky Navigation */
 .main-nav.sticky-nav {
@@ -293,8 +320,8 @@ ul.menu { /* WP generates this class for the <ul> */
 ul.sub-menu {
   display: none; /* Hidden by default */
   position: absolute;
-  top: 85%; /* Position below parent */
-  /* left: 0; */
+  top: 100%; /* Position below parent */
+  left: 0;
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(8px);
   padding: 1rem;
@@ -311,7 +338,6 @@ ul.sub-menu {
   to { opacity: 1; transform: translateY(0); }
 }
 
-.sub-menu:hover,
 .menu-item-has-children:hover > ul.sub-menu,
 .menu-item-has-children:focus-within > ul.sub-menu {
   display: block;
@@ -871,6 +897,174 @@ ul.sub-menu li a {
 /*--------------------------------------------------------------
 12.0 Footer
 --------------------------------------------------------------*/
+
+/* Styles for About Page (Owner Bio) Template - Placed before Footer */
+.about-bio-content { /* This class is on the <article> or a wrapping div */
+  padding-top: 2em;
+  padding-bottom: 2em; /* Added this */
+}
+
+.about-bio-content .entry-content {
+  /* General styling for the content from WordPress editor */
+}
+/* End Styles for About Page */
+
+/* Styles for Revamped Contact Page Template - Placed before Footer */
+.contact-page-content-wrapper {
+  padding-top: 2.5em;
+  padding-bottom: 2.5em;
+}
+
+.contact-layout-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5em; /* Gap between columns */
+}
+
+.contact-details-column,
+.contact-form-column {
+  flex: 1 1 300px; /* Allow columns to grow and shrink, with a base of 300px */
+}
+
+.contact-details-column h2,
+.contact-details-column h3 {
+  color: var(--accent-deep-pink);
+  font-family: var(--font-serif);
+  margin-bottom: 0.5em;
+}
+.contact-details-column h2 {
+    font-size: 1.8rem; /* Slightly smaller than hero titles */
+}
+.contact-details-column h3 {
+    font-size: 1.4rem;
+    margin-top: 1.5em;
+}
+
+.contact-details-column address {
+  font-style: normal;
+  line-height: 1.7;
+  margin-bottom: 1em;
+}
+.contact-details-column address strong {
+  font-family: var(--font-serif);
+  font-size: 1.1em;
+  color: var(--black-main);
+}
+.contact-details-column p {
+  margin-bottom: 1em;
+  line-height: 1.7;
+}
+.contact-details-column a {
+    text-decoration: underline; /* Make links in contact details more obvious */
+    text-decoration-color: var(--accent-lavender);
+}
+.contact-details-column a:hover {
+    text-decoration-color: var(--accent-deep-pink);
+}
+
+.map-placeholder-section {
+  background-color: var(--bg-contrast); /* Light background for map section */
+  padding: 2.5em 0;
+  margin-top: 2em;
+  text-align: center;
+}
+.map-placeholder-section .map-title {
+  font-size: 2rem;
+  font-family: var(--font-serif);
+  color: var(--accent-deep-pink);
+  margin-bottom: 1em;
+}
+.map-placeholder {
+  border: 1px dashed var(--accent-lavender);
+  padding: 2em;
+  min-height: 300px; /* Ensure it has some height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+}
+.map-placeholder p {
+  color: var(--black-secondary);
+}
+
+/* Responsive adjustments for contact page layout */
+@media (max-width: 768px) {
+  .contact-layout-flex {
+    flex-direction: column; /* Stack columns on smaller screens */
+  }
+  .contact-details-column,
+  .contact-form-column {
+    flex-basis: 100%; /* Full width when stacked */
+  }
+}
+/* End Styles for Revamped Contact Page */
+
+
+/*--------------------------------------------------------------
+12.0 Footer
+--------------------------------------------------------------*/
+.site-footer {
+  padding-bottom: 2em;
+}
+
+.about-bio-content .entry-content {
+  /* General styling for the content from WordPress editor */
+}
+
+.about-bio-image-wrapper {
+  margin-bottom: 1.5em;
+}
+
+.about-bio-featured-image { /* This targets the img tag itself */
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow);
+  max-width: 320px; /* Default max-width for smaller screens or if not floated */
+  height: auto;
+  display: block; /* Center it if not floated, or remove margin issues */
+  margin-left: auto; /* Center it if not floated */
+  margin-right: auto; /* Center it if not floated */
+}
+
+@media (min-width: 768px) { /* Apply float only on tablet and larger screens */
+  .about-bio-featured-image {
+    float: left;
+    margin-right: 2.5em; /* More space when floated */
+    margin-left: 0; /* Reset auto margin */
+    margin-bottom: 1em;
+    max-width: 300px; /* Adjust max-width for floated layout, can be % */
+    /* Consider a width like 33% or 40% if you want it relative to container */
+  }
+  .about-bio-content .entry-content::after { /* Basic clearfix */
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+/* Optional: Styles for the commented-out additional bio info in the template */
+.additional-bio-info {
+  margin-top: 2.5em;
+  padding-top: 2em;
+  border-top: 1px solid var(--accent-lavender);
+  clear: both; /* Ensure it clears any floats from the main content */
+}
+.additional-bio-info h3,
+.additional-bio-info h4 {
+  color: var(--accent-deep-pink);
+  font-family: var(--font-serif);
+  margin-bottom: 0.5em;
+}
+.additional-bio-info ul {
+  list-style: disc;
+  padding-left: 1.5em; /* Or var(--container-padding) if you want it to align with container edges */
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+}
+.additional-bio-info p {
+  margin-bottom: 1em;
+}
+
+
 .site-footer {
     background: var(--bg-contrast);
     color: var(--black-secondary);
@@ -1042,22 +1236,4 @@ ul.sub-menu li a {
     padding: 1.5rem var(--container-padding);
     font-size: 0.9rem;
   }
-}
-
-.menu-nav li a {
-    position: relative;
-    text-decoration: none;
-}
-.menu-nav li a::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--accent-pink);
-    transition: width 0.3s ease-in-out;
-}
-.menu-nav li a:hover::after {
-    width: 100%;
 }
