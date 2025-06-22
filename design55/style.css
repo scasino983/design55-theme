@@ -336,11 +336,13 @@ ul.sub-menu li a {
   position: relative;
   overflow: hidden;
   text-align: center;
-  min-height: 60vh;
+  /* min-height: 60vh; */
   padding: 3rem var(--container-padding);
   z-index: 1;
 }
-
+.page-template-page-template .hero-section{
+  height:300px;
+}
 .hero-img-wrapper {
   position: absolute;
   top: 0;
@@ -357,6 +359,10 @@ ul.sub-menu li a {
   width: 100%;
   height: 100%;
   opacity: 0.5;
+}
+
+.page-3 .hero-img{
+ object-position:  center -261px;
 }
 .hero-img.object-position-custom {
   object-position: 10% 50%;
@@ -391,7 +397,11 @@ ul.sub-menu li a {
 .hero-section .btn {
   margin-top: 1rem;
 }
-
+.btn-wrapper{
+  width:100%;
+  display: flex;
+  justify-content: center;
+}
 .btn {
   display: inline-block;
   padding: 0.9rem 2.4rem;
@@ -517,12 +527,23 @@ ul.sub-menu li a {
 .about-section__cta-text {
   color: var(--accent-pink);
   font-family: var(--font-script-readable);
-  font-size: 1.3rem;
+  font-size: 2.8rem;
+  text-align: center;
 }
 
 /*--------------------------------------------------------------
 9.0 Contact Section
 --------------------------------------------------------------*/
+.contact-section{
+      width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.contact-section .btn{
+    padding: 5px 10px;
+    font-size: 1rem;
+}
 /* This is a general wrapper, if used */
 .contact-section-wrapper {
   background: var(--bg-main);
@@ -822,30 +843,46 @@ ul.sub-menu li a {
   color: var(--black-secondary);
 }
 
+.image-accent-square{
+    position: absolute;
+    margin-top: -144px;
+    margin-left: -124px;
+    z-index: 1;
+    height: 90%;
+    width: 33%;
+    background: var(--black-main);
+    opacity:.2;
+}
+
 .info-image-photo {
   flex: 1 1 45%;
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index:2;
 }
 
 .info-image-photo img {
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow);
+  z-index:3;
 }
 
 /*--------------------------------------------------------------
 12.0 Footer
 --------------------------------------------------------------*/
 .site-footer {
-  background: var(--bg-contrast);
-  color: var(--black-secondary);
-  text-align: center;
-  padding: 2rem var(--container-padding) 1rem var(--container-padding);
-  border-top: 2px solid var(--accent-pink);
-  font-size: 1rem;
-  letter-spacing: 1px;
-  margin-top: auto;
+    background: var(--bg-contrast);
+    color: var(--black-secondary);
+    text-align: center;
+    padding: 1rem var(--container-padding) 1rem var(--container-padding);
+    border-top: 2px solid var(--accent-pink);
+    font-size: 1rem;
+    letter-spacing: 1px;
+    margin-top: auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
 }
 .site-footer p {
   margin: 0.5rem 0;
@@ -855,7 +892,13 @@ ul.sub-menu li a {
   color: var(--accent-pink);
   font-size: 1.1rem;
 }
-
+.footer-floral{
+  position: relative;
+  bottom: 0;
+  right: 0;
+  max-width: 150px;
+  z-index: 5;
+}
 
 /*--------------------------------------------------------------
 13.0 Responsive Media Queries
@@ -947,7 +990,15 @@ ul.sub-menu li a {
   .about-text {
     text-align: center;
   }
-
+  .contyact-section{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+}
+  
   .contact-hero {
     padding: 2em var(--container-padding) 1.2em var(--container-padding);
   }

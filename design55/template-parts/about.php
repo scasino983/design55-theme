@@ -16,5 +16,11 @@
     <div class="about-img-wrapper"> <?php // Changed class for clarity, assuming CSS uses .about-img-wrapper ?>
       <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/designer.webp'); ?>" alt="<?php esc_attr_e('Lead Designer', 'design55'); ?>">
     </div>
+
   </div>
-</section>
+  <div class="btn-wrapper">
+          <a href="/about" class="btn">
+                <?php esc_html_e('Meet the Designer', 'design55'); ?>
+        </a>
+  </div>
+      </section>

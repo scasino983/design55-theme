@@ -21,9 +21,9 @@ get_header(); ?>
                 <?php esc_html_e("We're here to help and answer any question you might have.", 'design55'); // Placeholder Subtitle ?>
 
             </div>
-            <a href="#" class="btn"> <?php // Placeholder CTA ?>
+            <!-- <a href="#" class="btn"> <?php // Placeholder CTA ?>
                 <?php esc_html_e('Learn More', 'design55'); ?>
-            </a>
+            </a> -->
         </div>
     </section>
 

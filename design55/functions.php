@@ -32,6 +32,23 @@ register_nav_menus( array('main-menu' => __( 'Main Menu', 'design55' )));
 
 
 /**
+ * Adds the page slug as a class to the body element.
+ *
+ * @param array $classes Existing array of body classes.
+ * @return array Modified array of body classes including the page slug.
+ */
+function design55_add_slug_to_body_class($classes) {
+    global $post;
+    if (isset($post)) {
+        $classes[] = $post->post_name; // Add the page slug
+    }
+    return $classes;
+}
+add_filter('body_class', 'design55_add_slug_to_body_class');
+
+
+
+/**
  * Adds SVG file support to the list of allowed MIME types for uploads.
  *
  * This function enables uploading SVG files by adding the 'svg' MIME type

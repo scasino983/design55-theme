@@ -24,7 +24,7 @@
         <input type="checkbox" id="cf-newsletter" name="cf-newsletter">
         <label for="cf-newsletter"><?php esc_html_e('Sign me up for the weekly newsletter', 'design55'); ?></label>
       </div>
-      <input type="submit" value="<?php esc_attr_e('Send Message', 'design55'); ?>">
+      <input class="btn" type="submit" value="<?php esc_attr_e('Send Message', 'design55'); ?>">
     </form>
   <?php endif; ?>
 </section>

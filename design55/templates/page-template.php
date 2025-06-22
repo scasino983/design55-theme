@@ -9,7 +9,7 @@ get_header(); ?>
 
     <section class="hero-section design55-page-hero">
         <div class="hero-img-wrapper">
-            <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/livingroom.webp'); ?>" alt="<?php echo esc_attr(get_the_title()); // Use page title for alt if appropriate ?>" class="hero-img" />
+            <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/livingroom-kitchen.jpg'); ?>" alt="<?php echo esc_attr(get_the_title()); // Use page title for alt if appropriate ?>" class="hero-img" />
             <div class="hero-overlay"></div>
         </div>
         <div class="hero-content">
@@ -19,9 +19,9 @@ get_header(); ?>
             <div class="hero-subtitle">
                 <?php esc_html_e('Dynamic subtitle for this page.', 'design55'); // Placeholder Subtitle, consider using post_excerpt or a custom field ?>
             </div>
-            <a href="#" class="btn"> <?php // Placeholder CTA ?>
+            <!-- <a href="#" class="btn"> <?php // Placeholder CTA ?>
                 <?php esc_html_e('Discover More', 'design55'); ?>
-            </a>
+            </a> -->
         </div>
     </section>
 
@@ -34,6 +34,7 @@ get_header(); ?>
                     <?php
                         if (get_the_content()) {
                             the_content();
+                             echo '<a href="' . esc_url(home_url('/contact')) . '" class="cta-button">' . esc_html__('Start Your Consultation', 'design55') . '</a>';
                         } else {
                             // Fallback content if the editor is empty
                             echo '<p>' . esc_html__('Our approach combines artistry, attention to detail, and premium materials to deliver results that are truly one-of-a-kind. Every project begins with listening and ends with your dream made real.', 'design55') . '</p>';
@@ -50,6 +51,7 @@ get_header(); ?>
                     ?>
                 </div>
                 <div class="info-image-photo">
+                    <div class="image-accent-square"></div>
                     <?php if (has_post_thumbnail()) : ?>
                         <?php the_post_thumbnail('large', ['class' => 'info-image', 'alt' => esc_attr(get_the_title())]); // Use 'large' or another appropriate size ?>
                     <?php else :
@@ -66,3 +68,26 @@ get_header(); ?>
 </main>
 
 <?php get_footer(); ?>
+
+<script>
+jQuery(document).ready(function($) {
+    var infoImage = $('.info-image');
+    var accentSquare = $('.image-accent-square');
+
+    function updateAccentSquare() {
+        var imageHeight = infoImage.height();
+        var imageWidth = infoImage.width();
+
+        accentSquare.css({
+            height: imageHeight * 0.8,
+            width: imageWidth * 0.8
+        });
+    }
+
+    // Initial update
+    updateAccentSquare();
+
+    // Update on window resize
+    $(window).resize(updateAccentSquare);
+});
+</script>
