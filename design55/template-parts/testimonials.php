@@ -13,6 +13,5 @@
  */
 ?>
 <div class="testimonials-placeholder container">
-    <p><?php esc_html_e( 'Testimonials will be displayed here. This section is pending implementation.', 'design55' ); ?></p>
-    <p><em><?php esc_html_e( 'To add testimonials, please edit this template part or create a custom solution as described in the file comments.', 'design55' ); ?></em></p>
+    <?php echo do_shortcode('[wp-testimonials widget-id=1]'); ?>
 </div>

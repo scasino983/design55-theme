@@ -237,16 +237,16 @@ ul.menu { /* WP generates this class for the <ul> */
   color: var(--black-secondary);
   font-weight: 500;
   padding: 0.5rem 0.8rem;
-  border-radius: var(--radius-lg);
+  /* border-radius: var(--radius-lg); */
   transition: background var(--transition), color var(--transition);
   display: block; /* Better for padding and hit area */
 }
 
-.main-nav ul.menu li a:hover,
+/* .main-nav ul.menu li a:hover,
 .main-nav ul.menu li a:focus {
   background: var(--accent-pink);
   color: var(--bg-contrast);
-}
+} */
 
 .main-nav ul.menu li a:focus-visible { /* Improved focus style */
   outline: 2px solid var(--accent-deep-pink);
@@ -320,12 +320,12 @@ ul.menu { /* WP generates this class for the <ul> */
 ul.sub-menu {
   display: none; /* Hidden by default */
   position: absolute;
-  top: 100%; /* Position below parent */
-  left: 0;
+  top: 85%; /* Position below parent */
+  /* left: 0; */
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(8px);
   padding: 1rem;
-  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  /* border-radius: 0 0 var(--radius-md) var(--radius-md); */
   box-shadow: var(--shadow);
   z-index: 1100;
   list-style: none;
@@ -386,7 +386,12 @@ ul.sub-menu li a {
   height: 100%;
   opacity: 0.5;
 }
-
+.about .hero-img{
+  opacity:0.3;
+}
+.testimonial .hero-img{
+  object-position: center -918px;
+}
 .page-3 .hero-img{
  object-position:  center -261px;
 }

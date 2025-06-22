@@ -14,7 +14,7 @@ get_header(); ?>
 
     <section class="hero-section design55-page-hero">
         <div class="hero-img-wrapper">
-            <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/designer.webp'); ?>" alt="<?php echo esc_attr(get_the_title()); // Use page title for alt ?>" class="hero-img" />
+            <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/palet.jpg'); ?>" alt="<?php echo esc_attr(get_the_title()); // Use page title for alt ?>" class="hero-img" />
             <div class="hero-overlay"></div>
         </div>
         <div class="hero-content">
@@ -22,7 +22,7 @@ get_header(); ?>
                 <?php the_title(); // Display the page's title in the hero ?>
             </h1>
             <div class="hero-subtitle">
-                <?php esc_html_e('The creative force behind Design55.', 'design55'); // Placeholder Subtitle, editable in template ?>
+                <?php esc_html_e('The Creative Force Behind The Design.', 'design55'); // Placeholder Subtitle, editable in template ?>
             </div>
             <?php // Optional: Add a CTA button here if desired for the About page hero ?>
             <?php /* <a href="#contact" class="btn"><?php esc_html_e('Get In Touch', 'design55'); ?></a> */ ?>

@@ -8,7 +8,7 @@ get_header(); ?>
 
     <section class="hero-section design55-page-hero">
         <div class="hero-img-wrapper">
-            <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/dining.webp'); ?>" alt="<?php esc_attr_e('Dining area background', 'design55'); ?>" class="hero-img object-position-custom" />
+            <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/boise.jpg'); ?>" alt="<?php esc_attr_e('Dining area background', 'design55'); ?>" class="hero-img object-position-custom" />
             <div class="hero-overlay"></div>
         </div>
         <div class="hero-content">
@@ -61,9 +61,10 @@ get_header(); ?>
         <div class="container">
             <h2 class="map-title"><?php esc_html_e('Find Us', 'design55'); ?></h2>
             <div class="map-placeholder">
-                <!-- Google Maps embed code or image placeholder for Boise, ID area goes here -->
-                <p><?php esc_html_e('Map of Boise, ID area will be displayed here. Please add your map embed code or a static map image.', 'design55'); ?></p>
-                <?php // Example: <iframe src="YOUR_GOOGLE_MAP_EMBED_URL" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe> ?>
+                            <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/boise-2.jpg'); ?>" alt="<?php esc_attr_e('Dining area background', 'design55'); ?>" class="hero-img object-position-custom" />
+            <!-- Google Maps embed code or image placeholder for Boise, ID area goes here -->
+                <!-- <p><?php esc_html_e('Map of Boise, ID area will be displayed here. Please add your map embed code or a static map image.', 'design55'); ?></p>
+                <?php // Example: <iframe src="YOUR_GOOGLE_MAP_EMBED_URL" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe> ?> -->
             </div>
         </div>
     </section>
