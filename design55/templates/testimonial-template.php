@@ -24,7 +24,6 @@ get_header();
     <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
         <?php // The <header class="page-header"> with the_title() is removed as the hero serves this purpose. ?>
         <div class="page-content container">
-
             <?php
                 // Display page content if any (e.g., an introduction to testimonials)
                 // This content will appear *below* the new hero section.
