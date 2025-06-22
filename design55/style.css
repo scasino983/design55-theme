@@ -279,6 +279,221 @@ ul.menu { /* WP generates this class for the <ul> */
 }
 /* End Menu item underline animation */
 
+/*--------------------------------------------------------------
+5.5 Secondary and Mobile Navigation
+--------------------------------------------------------------*/
+
+/* Secondary Sticky-Scroll Menu (Desktop) */
+.secondary-sticky-nav {
+  display: none; /* Hidden by default, shown by JS */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.95); /* Slightly opaque white */
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+  z-index: 998; /* Below main header dropdowns, above content */
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--accent-pink);
+}
+.secondary-sticky-nav .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.secondary-sticky-nav .secondary-logo img.custom-logo {
+  max-height: 40px; /* Smaller logo */
+  width: auto;
+}
+.secondary-sticky-nav .secondary-logo .site-name-link {
+    font-size: 1.5rem; /* Smaller site name if no logo */
+    color: var(--black-main);
+    font-family: var(--font-serif);
+    font-weight: 700;
+}
+
+.secondary-sticky-nav ul.a-secondary-menu {
+  display: flex;
+  gap: 1rem; /* Adjust spacing */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.secondary-sticky-nav ul.a-secondary-menu li a {
+  font-size: 0.9rem; /* Smaller font size */
+  font-family: var(--font-sans);
+  color: var(--black-secondary);
+  font-weight: 500;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--radius-md);
+  transition: background var(--transition), color var(--transition);
+  position: relative;
+  text-decoration: none;
+  overflow: hidden;
+}
+.secondary-sticky-nav ul.a-secondary-menu li a::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; /* Ensure it's below padding */
+  left: 0;
+  width: 0;
+  height: 1px; /* Thinner underline */
+  background-color: var(--accent-deep-pink);
+  transition: width 0.3s ease-in-out;
+}
+.secondary-sticky-nav ul.a-secondary-menu li a:hover,
+.secondary-sticky-nav ul.a-secondary-menu li a:focus {
+  background-color: var(--accent-pink);
+  color: var(--bg-contrast);
+}
+.secondary-sticky-nav ul.a-secondary-menu li a:hover::after,
+.secondary-sticky-nav ul.a-secondary-menu li a:focus::after,
+.secondary-sticky-nav ul.a-secondary-menu li.current-menu-item > a::after,
+.secondary-sticky-nav ul.a-secondary-menu li.current-menu-ancestor > a::after {
+  width: 100%;
+}
+
+.secondary-sticky-nav--visible {
+  display: block; /* Show the menu */
+}
+
+
+/* Mobile Menu Toggle Button (Hamburger) */
+.mobile-menu-toggle {
+  display: none; /* Hidden by default, shown on mobile */
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  margin-left: auto; /* Pushes it to the right if other items are in header flex */
+  cursor: pointer;
+  z-index: 1002; /* Above sticky nav, below mobile panel when open */
+}
+.mobile-menu-toggle .toggle-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: var(--black-main);
+  margin: 4px 0;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  border-radius: 1px;
+}
+/* Hamburger to X animation */
+.mobile-menu-toggle.active .toggle-bar:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+.mobile-menu-toggle.active .toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+.mobile-menu-toggle.active .toggle-bar:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+
+/* Mobile Menu Panel */
+.mobile-menu-panel {
+  display: block; /* Keep it in layout tree for JS */
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px; /* Adjust width as needed */
+  max-width: 80%;
+  height: 100vh;
+  background-color: var(--bg-contrast);
+  box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+  z-index: 1001; /* Above content and secondary nav */
+  transform: translateX(100%); /* Initially off-screen to the right */
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1); /* Smooth animation */
+  padding: 1.5rem;
+  overflow-y: auto; /* Allow scrolling if menu is long */
+}
+.mobile-menu-panel.open {
+  transform: translateX(0);
+}
+.mobile-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--accent-lavender);
+}
+.mobile-menu-panel .mobile-menu-logo img.custom-logo {
+  max-height: 45px; /* Adjust as needed */
+  width: auto;
+}
+.mobile-menu-panel .mobile-menu-logo .site-name-link {
+    font-size: 1.6rem;
+    color: var(--black-main);
+    font-family: var(--font-serif);
+    font-weight: 700;
+}
+.mobile-menu-close {
+  background: none;
+  border: none;
+  font-size: 2rem; /* Make X larger */
+  color: var(--black-secondary);
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  line-height: 1;
+}
+.mobile-menu-panel ul.a-mobile-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.mobile-menu-panel ul.a-mobile-menu li {
+  margin-bottom: 0.5rem;
+}
+.mobile-menu-panel ul.a-mobile-menu li a {
+  display: block;
+  padding: 0.75rem 0.5rem;
+  font-family: var(--font-sans);
+  color: var(--black-main);
+  text-decoration: none;
+  font-size: 1.1rem;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.2s ease;
+}
+.mobile-menu-panel ul.a-mobile-menu li a:hover,
+.mobile-menu-panel ul.a-mobile-menu li a:focus {
+  background-color: var(--accent-pink);
+  color: #fff;
+}
+.mobile-menu-panel ul.a-mobile-menu ul.sub-menu { /* Sub-menu styling for mobile */
+    padding-left: 1rem;
+    margin-top: 0.5rem;
+    border-left: 2px solid var(--accent-lavender);
+}
+.mobile-menu-panel ul.a-mobile-menu ul.sub-menu li a {
+    font-size: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu-overlay {
+  display: none; /* Hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5); /* Semi-transparent black */
+  z-index: 1000; /* Below mobile panel, above content */
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
+}
+.mobile-menu-overlay.active {
+  display: block;
+  opacity: 1;
+}
+
+/* Body class when mobile menu is open */
+body.mobile-menu-active {
+  overflow: hidden; /* Prevent scrolling of page content */
+}
+
 
 /* 5.3 Sticky Navigation */
 .main-nav.sticky-nav {
@@ -1112,6 +1327,16 @@ ul.sub-menu li a {
 @media (max-width: 600px) {
   :root {
     --container-padding: 0.8rem;
+  }
+
+  .site-header .main-nav {
+    display: none; /* Hide main navigation */
+  }
+  .site-header .mobile-menu-toggle {
+    display: block; /* Show hamburger toggle */
+  }
+  .secondary-sticky-nav {
+    display: none !important; /* Ensure secondary sticky nav is also hidden on mobile */
   }
 
   .hero-title {
