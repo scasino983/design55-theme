@@ -822,14 +822,13 @@ ul.sub-menu li a {
   overflow:clip;
 }
 .contact-section-img{
-     position: absolute;
+min-height: 630px;
+    position: absolute;
     z-index: -1;
-    object-position: center center;
     left: 0;
-    width: 100vw;
-    height: auto;
     opacity: 0.1;
     pointer-events: none;
+    object-fit: cover;
 }
 .contact-section-wrapper .section-title { /* Example for a title within this wrapper */
   font-family: var(--font-serif);
