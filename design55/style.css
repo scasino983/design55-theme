@@ -82,6 +82,9 @@ img {
 :root {
   --bg-main: #dcf2eeff;
   --bg-contrast: #eef3f4ff;
+  --bg-contrast-dark:rgb(45, 59, 62);
+  --bg-contrast-transparent: #eef3f4a7;
+
   --accent-pink: #ff66c4ff;
   --accent-deep-pink: #b1468cff;
   --accent-lavender: #c78eb1ff;
@@ -284,21 +287,31 @@ ul.menu { /* WP generates this class for the <ul> */
 --------------------------------------------------------------*/
 
 /* Secondary Sticky-Scroll Menu (Desktop) */
-.secondary-sticky-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  transform: translateY(-120%); /* Start off-screen; 120% to ensure it's fully hidden if it has padding/border */
-  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  background-color: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  box-shadow: var(--shadow);
-  z-index: 998;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--accent-pink);
-  /* display: none; by default is not needed if transform handles initial hiding */
+
+element.style {
+    display: flex
+;
+    opacity: 1;
 }
+.secondary-sticky-nav.secondary-menu--active {
+    transform: translateY(0);
+}
+.secondary-sticky-nav {
+    position: fixed;
+    top: 0px;
+    left: 0;
+    width: 100%;
+    transform: translateY(-120%);
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    background-color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(8px);
+    box-shadow: var(--shadow);
+    z-index: 998;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--accent-pink);
+}
+
+
 
 .secondary-sticky-nav.secondary-menu--active { /* Renamed class for clarity with sliding behavior */
   transform: translateY(0); /* Slide into view */
@@ -309,6 +322,7 @@ ul.menu { /* WP generates this class for the <ul> */
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width:100%;
 }
 .secondary-sticky-nav .secondary-logo img.custom-logo {
   max-height: 40px;
@@ -534,7 +548,12 @@ body.mobile-menu-active {
 .menu-item-has-children:hover > a::after{
  color: var(--bg-contrast);
 }
-
+#menu-menu-2{
+position: fixed;
+    top: 22px;
+    flex-direction: row;
+    right: 22px;
+}
 
 ul.sub-menu {
   display: none; /* Hidden by default */
@@ -909,13 +928,29 @@ ul.sub-menu li a {
   font-weight: normal;
 }
 
+.contact-section--framed {
+    position: relative;
+    overflow: hidden;
+}
+.contact-frame-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: url('../assets/images/svg/frames.svg') center center/cover no-repeat;
+    opacity: 1;
+    pointer-events: none;
+}
+.contact-section--framed > *:not(.contact-frame-bg) {
+    position: relative;
+    z-index: 1;
+}
 
 /*--------------------------------------------------------------
 10.0 Call to Action (CTA)
 --------------------------------------------------------------*/
 /* 10.1 CTA Base */
 .cta {
-  padding: 2em var(--container-padding);
+  padding: 0.5em var(--container-padding);
   border-radius: var(--radius-xl);
   margin: 2.5em auto;
   max-width: 700px;
@@ -976,10 +1011,22 @@ ul.sub-menu li a {
 }
 
 /* 10.3 CTA Secondary */
+.cta-secondary-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: var(--bg-contrast-dark);
+}
+
 .cta-secondary {
+  width:80%;
   background: var(--bg-contrast);
   color: var(--deep-green);
   border: 1.5px solid var(--contrast-green);
+}
+.cta-secondary h2{
+  margin-top:0px;
 }
 .cta-secondary .cta-title,
 .cta-secondary h2,
@@ -1185,6 +1232,14 @@ ul.sub-menu li a {
 .contact-details-column a:hover {
     text-decoration-color: var(--accent-deep-pink);
 }
+.wpcf7.js{
+  padding:1rem;
+  border-radius: 10px;
+  background: var(--bg-contrast-transparent);
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+}
+
 
 .map-placeholder-section {
   background-color: var(--bg-contrast); /* Light background for map section */

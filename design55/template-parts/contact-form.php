@@ -27,4 +27,5 @@
       <input class="btn" type="submit" value="<?php esc_attr_e('Send Message', 'design55'); ?>">
     </form>
   <?php endif; ?>
+  <img class="contact-frame-img" src="<?php echo get_template_directory_uri(); ?>/assets/images/svg/frames.svg" alt="Decorative Frame" style="position:absolute;z-index:0;left:0;top:0;width:100%;height:100%;opacity:0.18;pointer-events:none;" />
 </section>

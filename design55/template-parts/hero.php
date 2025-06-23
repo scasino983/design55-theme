@@ -5,10 +5,10 @@ $slug = is_front_page() ? 'home' : basename(get_permalink());
 // Map slugs to hero images (edit as needed)
 $hero_images = array(
     'home'        => get_template_directory_uri() . '/assets/images/livingroom-kitchen.jpg',
-    'about'       => get_template_directory_uri() . '/assets/images/livingroom-kitchen.jpg',
-    'contact'     => get_template_directory_uri() . '/assets/images/hero-contact.jpg',
-    'projects'    => get_template_directory_uri() . '/assets/images/hero-projects.jpg',
-    'testimonials'=> get_template_directory_uri() . '/assets/images/hero-testimonials.jpg',
+    'about'       => get_template_directory_uri() . '/assets/images/living-room-2.jpg',
+    'contact'     => get_template_directory_uri() . '/assets/images/boise.jpg',
+    'projects'    => get_template_directory_uri() . '/assets/images/living-room-2.jpg',
+    'testimonials'=> get_template_directory_uri() . '/assets/images/living-room-3.jpg',
     // add more as needed
 );
 

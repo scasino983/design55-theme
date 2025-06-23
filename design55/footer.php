@@ -6,5 +6,36 @@
     </div>
   </footer>
   <?php wp_footer(); ?>
+  <script>
+jQuery(document).ready(function($) {
+    var $secondaryMenu = $('.secondary-sticky-nav');
+    var $siteHeader = $('.site-header');
+
+    // Ensure menu is hidden and transparent initially
+    $secondaryMenu.css({
+        display: 'none',
+        opacity: 0
+    });
+
+    function toggleSecondaryMenu() {
+        var headerBottom = $siteHeader.offset().top + $siteHeader.outerHeight();
+        if ($(window).scrollTop() > headerBottom) {
+            $secondaryMenu.stop(true, true)
+                .css('display', 'flex')
+                .animate({ opacity: 1 }, 300);
+        } else {
+            $secondaryMenu.stop(true, true)
+                .animate({ opacity: 0 }, 300, function() {
+                    $secondaryMenu.css('display', 'none');
+                });
+        }
+    }
+
+    $(window).on('scroll resize', toggleSecondaryMenu);
+
+    // Ensure all submit buttons always have the 'btn' class
+    $("input[type='submit']").addClass('btn');
+});
+</script>
 </body>
 </html>
