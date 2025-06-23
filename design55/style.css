@@ -808,6 +808,7 @@ ul.sub-menu li a {
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow: clip;
 }
 .contact-section .btn{
     padding: 5px 10px;
@@ -818,6 +819,17 @@ ul.sub-menu li a {
   background: var(--bg-main);
   padding: 4rem var(--container-padding);
   text-align: center;
+  overflow:clip;
+}
+.contact-section-img{
+     position: absolute;
+    z-index: -1;
+    object-position: center center;
+    left: 0;
+    width: 100vw;
+    height: auto;
+    opacity: 0.1;
+    pointer-events: none;
 }
 .contact-section-wrapper .section-title { /* Example for a title within this wrapper */
   font-family: var(--font-serif);
@@ -928,22 +940,7 @@ ul.sub-menu li a {
   font-weight: normal;
 }
 
-.contact-section--framed {
-    position: relative;
-    overflow: hidden;
-}
-.contact-frame-bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background: url('../assets/images/svg/frames.svg') center center/cover no-repeat;
-    opacity: 1;
-    pointer-events: none;
-}
-.contact-section--framed > *:not(.contact-frame-bg) {
-    position: relative;
-    z-index: 1;
-}
+
 
 /*--------------------------------------------------------------
 10.0 Call to Action (CTA)
