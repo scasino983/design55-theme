@@ -1,4 +1,5 @@
 <section class="about-section" id="about">
+  <div class="about-section-inner">
   <h2 class="about-title"><?php esc_html_e('Meet the Designer', 'design55'); ?></h2>
   <div class="about-columns">
     <div class="about-text">
@@ -13,14 +14,19 @@
         <?php esc_html_e('Let’s make your dream space a reality.', 'design55'); ?>
       </p>
     </div>
-    <div class="about-img-wrapper"> <?php // Changed class for clarity, assuming CSS uses .about-img-wrapper ?>
-      <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/designer.webp'); ?>" alt="<?php esc_attr_e('Lead Designer', 'design55'); ?>">
-    </div>
 
-  </div>
+  
+        <div class="about-img-wrapper"> 
+
+        <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/designer.webp'); ?>" alt="<?php esc_attr_e('Lead Designer', 'design55'); ?>">
+        </div>
+
+    </div>
   <div class="btn-wrapper">
           <a href="/about" class="btn">
                 <?php esc_html_e('Meet the Designer', 'design55'); ?>
         </a>
   </div>
+  </div>
+    <img class="about-section-img" src="<?php echo get_template_directory_uri(); ?>/assets/images/coffee.jpg" alt="Decorative Frame"  />
       </section>

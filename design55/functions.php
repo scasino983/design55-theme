@@ -87,6 +87,9 @@ add_filter('upload_mimes', 'design55_svg_mime_types');
  */
 require get_template_directory() . '/inc/customizer.php';
 
+
+
+
 /*
  * The following PHPMailer SMTP configuration is commented out by default.
  * It's generally recommended to handle SMTP settings via a dedicated plugin
@@ -96,17 +99,17 @@ require get_template_directory() . '/inc/customizer.php';
  * If you choose to use this, uncomment the block and replace the placeholder
  * values with your actual SMTP credentials.
  */
-/*
+
 add_action( 'phpmailer_init', function( $phpmailer ) {
     $phpmailer->isSMTP();
-    $phpmailer->Host       = 'smtp.example.com'; // E.g., smtp.gmail.com or your SMTP host
+    $phpmailer->Host       = 'smtp.designrrinterior.com'; // E.g., smtp.gmail.com or your SMTP host
     $phpmailer->SMTPAuth   = true;
     $phpmailer->Port       = 587; // Or 465 for SSL, 25 for non-secure (not recommended)
-    $phpmailer->Username   = 'your_smtp_username'; // Your SMTP username
-    $phpmailer->Password   = 'your_smtp_password'; // Your SMTP password
+    $phpmailer->Username   = 'beth@design55interi9or.com'; // Your SMTP username
+    $phpmailer->Password   = 'design5512!@'; // Your SMTP password
     $phpmailer->SMTPSecure = 'tls'; // Or 'ssl' if using port 465
 });
-*/
+
 
 /**
  * Appends the newsletter modal HTML to the footer.
@@ -188,7 +191,7 @@ function design55_create_newsletter_table() {
  */
 function design55_handle_newsletter_signup() {
     global $wpdb;
-    $table_name = $wpdb->prefix . 'newsletter_subscribers';
+    $table_name = $wp->prefix . 'newsletter_subscribers';
 
     // Attempt to create table if it doesn't exist (good for robustness)
     if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
