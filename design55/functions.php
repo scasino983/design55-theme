@@ -101,13 +101,25 @@ require get_template_directory() . '/inc/customizer.php';
  */
 
 add_action( 'phpmailer_init', function( $phpmailer ) {
-    $phpmailer->isSMTP();
-    $phpmailer->Host       = 'smtp.designrrinterior.com'; // E.g., smtp.gmail.com or your SMTP host
-    $phpmailer->SMTPAuth   = true;
-    $phpmailer->Port       = 587; // Or 465 for SSL, 25 for non-secure (not recommended)
-    $phpmailer->Username   = 'beth@design55interi9or.com'; // Your SMTP username
-    $phpmailer->Password   = 'design5512!@'; // Your SMTP password
-    $phpmailer->SMTPSecure = 'tls'; // Or 'ssl' if using port 465
+    // Load environment variables
+    design55_load_env();
+    
+    $smtp_host = getenv('SMTP_HOST');
+    $smtp_username = getenv('SMTP_USERNAME');
+    $smtp_password = getenv('SMTP_PASSWORD');
+    $smtp_port = getenv('SMTP_PORT') ?: 587;
+    $smtp_secure = getenv('SMTP_SECURE') ?: 'tls';
+    
+    // Only configure SMTP if credentials are available
+    if ($smtp_host && $smtp_username && $smtp_password) {
+        $phpmailer->isSMTP();
+        $phpmailer->Host       = $smtp_host;
+        $phpmailer->SMTPAuth   = true;
+        $phpmailer->Port       = $smtp_port;
+        $phpmailer->Username   = $smtp_username;
+        $phpmailer->Password   = $smtp_password;
+        $phpmailer->SMTPSecure = $smtp_secure;
+    }
 });
 
 
@@ -402,5 +414,29 @@ function design55_handle_unsubscribe_request() {
 // Using 'init' allows the link to be site_url('/') based.
 // admin_post_nopriv_ and admin_post_ actions are typically for form submissions to admin-post.php.
 add_action('init', 'design55_handle_unsubscribe_request');
+
+
+/**
+ * Load environment variables from .env file
+ */
+function design55_load_env() {
+    $env_file = get_template_directory() . '/.env';
+    if (file_exists($env_file)) {
+        $lines = file($env_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        foreach ($lines as $line) {
+            if (strpos($line, '#') === 0) continue; // Skip comments
+            if (strpos($line, '=') !== false) {
+                list($key, $value) = explode('=', $line, 2);
+                $key = trim($key);
+                $value = trim($value);
+                if (!getenv($key)) {
+                    putenv("$key=$value");
+                }
+            }
+        }
+    }
+}
+// Load environment variables early
+add_action('init', 'design55_load_env', 1);
 
 ?>
