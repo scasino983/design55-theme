@@ -7,7 +7,7 @@ get_header();
 
     <section class="hero-section design55-page-hero">
         <div class="hero-img-wrapper">
-            <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/entry-alt.jpg'); ?>" alt="<?php esc_attr_e('Client testimonials background', 'design55'); ?>" class="hero-img" />
+            <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/bedroom-2.jpg'); ?>" alt="<?php esc_attr_e('Client testimonials background', 'design55'); ?>" class="hero-img" />
             <div class="hero-overlay"></div>
         </div>
         <div class="hero-content">
@@ -35,5 +35,6 @@ get_header();
         </div>
     <?php endwhile; endif; ?>
 </main>
+<?php get_template_part('template-parts/contact-form'); ?>
 
 <?php get_footer(); ?>

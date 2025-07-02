@@ -63,8 +63,9 @@ get_header(); ?>
             </div>
         </section>
     <?php endwhile; endif; ?>
+    
 </main>
-
+<?php get_template_part('template-parts/contact-form'); ?>
 <?php get_footer(); ?>
 
 <script>

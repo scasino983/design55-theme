@@ -2,9 +2,22 @@
   <h2><?php esc_html_e('Contact', 'design55'); ?></h2>
   <?php if ( function_exists('wpcf7') ) : ?>
     <?php
-        // Tip: Consider making the shortcode ID configurable via Customizer or a theme option.
+        // Custom Contact Form 7 with asterisks for required fields
         echo do_shortcode('[contact-form-7 id="1" title="Contact form 1"]');
     ?>
+    <style>
+      /* Add asterisks to Contact Form 7 required fields */
+      .wpcf7-form label:after {
+        content: " *";
+        color: #e91e63;
+        font-weight: bold;
+        font-size: 1.1em;
+      }
+      /* Remove asterisk from optional fields if any */
+      .wpcf7-form .optional-field label:after {
+        content: "";
+      }
+    </style>
   <?php else : ?>
     <p><?php esc_html_e('Contact Form 7 plugin is not active. Please install and activate it, or use the basic form below.', 'design55'); ?></p>
     <form class="contact-form" action="#" method="post"> <?php // Added action and method for basic functionality ?>
@@ -23,6 +36,13 @@
           </label>
           <input type="email" id="cf-email" name="cf-email" required>
         </div>
+      </div>
+      <div class="form-group">
+        <label for="cf-phone">
+          <?php esc_html_e('Phone Number', 'design55'); ?>
+          <span class="required-star">*</span>
+        </label>
+        <input type="tel" id="cf-phone" name="cf-phone" placeholder="<?php esc_attr_e('(555) 123-4567', 'design55'); ?>" required>
       </div>
       <div class="form-group">
         <label for="cf-message">
