@@ -1,5 +1,12 @@
 {
   "workbench.colorTheme": "Best Themes - Seti UI",
   "bestdarkthemes.workspaceSettings": true,
-  "bestdarkthemes.enableWorkspaceOverride": true
+  "bestdarkthemes.enableWorkspaceOverride": true,
+
+    "editor.quickSuggestions": false,
+  "editor.suggestOnTriggerCharacters": false,
+  "editor.acceptSuggestionOnEnter": "off",
+  "editor.tabCompletion": "off",
+  "editor.wordBasedSuggestions": false,
+  "editor.parameterHints.enabled": false
 }

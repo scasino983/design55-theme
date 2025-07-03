@@ -1,5 +1,5 @@
 <section class="gallery-section" id="gallery">
-  <h2 class="gallery-title"><?php esc_html_e('', 'design55'); ?>Explore Our <span class="color">Signature</span> Spaces</h2>
+  <h2 class="gallery-title"><?php esc_html_e('', 'design55'); ?>Explore Our <span class="color">Signature</span> Services</h2>
   <p class="gallery-subtitle">From serene bedrooms to show-stopping kitchens, our portfolio captures the artistry, detail, and elegance we bring to every project.</p>
 
   <div class="gallery-grid">

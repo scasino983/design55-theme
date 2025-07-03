@@ -8,7 +8,7 @@ get_header(); ?>
 
     <section class="hero-section design55-page-hero">
         <div class="hero-img-wrapper">
-            <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/boise.jpg'); ?>" alt="<?php esc_attr_e('Dining area background', 'design55'); ?>" class="hero-img object-position-custom" />
+            <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/livingroom-9.jpg'); ?>" alt="<?php esc_attr_e('Dining area background', 'design55'); ?>" class="hero-img object-position-custom" />
             <div class="hero-overlay"></div>
         </div>
         <div class="hero-content">
@@ -81,5 +81,5 @@ get_header(); ?>
     */
     ?>
 </main>
-
+<?php echo do_shortcode('[newsletter_signup]'); ?>
 <?php get_footer(); ?>

@@ -26,6 +26,7 @@ Text Domain: design55
 9.0 Contact Section
   9.1 Contact Hero
   9.2 Contact Form
+  9.3 Email Sign up
 10.0 Call to Action (CTA)
   10.1 CTA Base
   10.2 CTA Primary
@@ -56,7 +57,7 @@ body {
   margin: 0;
   padding: 0;
   line-height: 1.6;
-  background: var(--bg-main);
+    background: #dcf2eeba;
   color: var(--black-main);
   font-family: var(--font-serif);
 }
@@ -931,7 +932,49 @@ width: 100%;
     position: relative; /* Ensure positioned ancestor for absolute children */
     overflow: hidden;   /* Use hidden for best browser support */
     position: relative;
+    padding: 50px 0;
 }
+.contact-intro{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.contact-section .contact-button.btn{
+  margin:0 auto;
+  border-radius: 0;
+  width:420px;
+  font-size: 1.2rem;
+  /* padding: 0.8rem 1.5rem; */
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;  
+  color:var(--black-main);
+  background-color: var(--bg-contrast-transparent-light);
+  border:2px solid var(--bg-contrast);
+}
+.contact-section .contact-button.btn:hover,
+.contact-section .contact-button.btn:focus {
+  background-color: var(--bg-contrast-transparent-light);
+color: var(--accent-pink);
+}
+span.arrow,
+.conatct-button.btn > span.arrow{
+  dispolay:none;
+  opacity:0;
+  transition: opacity 0.2s ease-in;
+  font-size: 2rem;
+    margin-left: 13px;
+    margin-bottom: 5px;
+    margin-right: -26px;
+
+}
+.contact-button:hover span.arrow,
+.contact-button:focus span.arrow {
+  opacity: 1;
+  display:block;
+}
+
 .contact-section .btn{
     padding: 5px 10px;
     font-size: 1rem;
@@ -987,13 +1030,14 @@ width: 100%;
   background: var(--bg-contrast); /* Or var(--bg-main) */
 }
 .contact-form { /* The <form> element */
-  max-width: 520px; /* Retained */
+  max-width: 60 0px; /* Retained */
   margin: 2rem auto 0 auto; /* Retained */
   padding: 2.4rem;
-  background: var(--bg-contrast); /* Can be different from section if desired */
+  background: var(--bg-contrast-transparent-light); /* Can be different from section if desired */
+  backdrop-filter: blur(4px); 
   border-radius: var(--radius-xl); /* Retained */
   box-shadow: var(--shadow);
-  border: 1px solid var(--accent-lavender); /* Added a subtle border */
+  border: 2px solid var(--bg-contrast); /* Added a subtle border */
 }
 
 .contact-form .form-row {
@@ -1004,6 +1048,18 @@ width: 100%;
   flex: 1 1 0;
   min-width: 0;
 }
+    
+      /* .wpcf7-form label:after {
+        content: " *";
+        color: #e91e63;
+        font-weight: bold;
+        font-size: 1.1em;
+      }
+      /* Remove asterisk from optional fields if any */
+      .wpcf7-form .optional-field label:after {
+        content: "";
+      }
+     */
 @media (max-width: 700px) {
   .contact-form .form-row {
     flex-direction: column;
@@ -1012,7 +1068,7 @@ width: 100%;
 }
 
 .contact-form .form-group { /* Wrapper for label + input */
-  margin-bottom: 1.2rem;
+  /* margin-bottom: 1.2rem; */
 }
 .contact-form label {
   display: block;
@@ -1064,7 +1120,7 @@ width: 100%;
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  margin-bottom: 1.4rem;
+  /* margin-bottom: 1.4rem; */
   font-size: 0.98rem;
   color: var(--deep-green);
   text-align: left;
@@ -1079,12 +1135,71 @@ width: 100%;
 }
 
 .required-star {
-  color: #e91e63 !important; /* Bright pink to ensure visibility */
+  color: var(--accent-pink) ;
   margin-left: 0.2em;
   font-size: 1.2em;
   font-weight: bold;
   vertical-align: middle;
   display: inline-block;
+}
+
+/*--------------------------------------------------------------
+9.3 Email Sighn Up
+--------------------------------------------------------------*/
+
+.ns-signup-wrapper {
+  text-align: center;
+  background: #f7f7f7;
+  padding: 3rem 1rem;
+}
+.ns-signup-wrapper h2 {
+  font-size: 2rem;
+  margin-bottom: .5rem;
+  letter-spacing: .1em;
+}
+.ns-sub {
+  color: #666;
+  margin-bottom: 2rem;
+}
+.ns-form {
+  display: inline-flex;
+  max-width: 500px;
+  width: 100%;
+}
+.ns-input {
+  flex: 1;
+  padding: .75rem 1rem;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+}
+.ns-submit {
+  background: #222;
+  color: #fff;
+  border: none;
+  padding: .75rem 1.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+.ns-submit:hover {
+  background: #000;
+}
+.ns-thanks {
+  color: green;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+.ns-social {
+  margin-top: 2rem;
+}
+.ns-social a {
+  display: inline-block;
+  margin: 0 .5rem;
+  font-size: 1.25rem;
+  color: #222;
+}
+.ns-social a:hover {
+  color: #000;
 }
 
 /*--------------------------------------------------------------
@@ -1095,7 +1210,7 @@ width: 100%;
   width:100%;
   background: var(--bg-contrast);
   /* margin: 2em 0; */
-  padding: 1.5em ;
+  /* padding: 1.5em ; */
    text-align: center;
 }
 .cta-inner{
@@ -1136,15 +1251,27 @@ width: 100%;
   color: var(--black-secondary);
   line-height: 1.7;
 }
-
+.cta span.color{
+  color: var(--accent-pink);
+  font-weight: 800;
+}
 /* 10.2 CTA Primary */
 .cta-primary {
   /* background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-lavender) 100%); */
   background: linear-gradient(135deg, #414141 0%, #d3cad0 100%);
   color: var(--bg-contrast);
+  /* background: url('../design55/assets/images/sheets.png') no-repeat center center;
+  background-size: cover; */
+  padding:50px 0;
+}
+
+.cta-primary .cta-inner {
   background: url('../design55/assets/images/sheets.png') no-repeat center center;
   background-size: cover;
-}
+  width:100%;
+  max-width: unset;
+
+} 
 .cta-primary .cta-title,
 .cta-primary h2,
 .cta-primary h3,
@@ -1164,24 +1291,33 @@ background:#ffffffb3;
 
 /* 10.3 CTA Secondary */
 .cta-secondary{
-  position: relative;
-  overflow: clip;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  /* background-color: var(--bg-contrast-dark); */
+  padding:8rem 0;
+  background-image: linear-gradient(105deg, #081A22FF 0%, #33333AFF 100%);
 }
 
 .cta-secondary .cta-inner {
-  width:80%;
+    /* position: relative; */
+    overflow: clip;
+    /* display: flex; */
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* flex-direction: column; */
+    /* background-color: var(--bg-contrast-dark); */
+    background-image: url(../design55/assets/images/couch.jpg);
+    background-position: center;
+    background-size: cover;
+    /* border: 1.5px solid var(--contrast-green); */
+    max-width: unset;
+    /* background: no-repeat; */
+}
+.cta-secondary .cta-secondary-text{
+  width:50%;
   background: var(--bg-contrast-transparent);
   backdrop-filter: blur(6px);
   color: var(--black-main);
   margin:2em auto;
   z-index:5;
   position: relative;
-  /* border: 1.5px solid var(--contrast-green); */
 }
 .cta-testimonial .cta-inner{
    width:80%;
@@ -1231,12 +1367,15 @@ background:#ffffffb3;
   justify-content: center;
   position: relative;;
 }
-.cta.cta-testimonial img{
+.cta-testimonial-img{
     width: 100vw;
     height: auto;
     position: absolute;
     z-index: -1;
-    opacity: 0.2;
+    opacity: 0.1;
+}
+.cta-testimonial .cta-inner{
+  overflow:visible
 }
 a.tetsimonial-button.btn{
   width:250px;
@@ -1480,7 +1619,13 @@ padding: 1rem;
 .map-placeholder p {
   color: var(--black-secondary);
 }
-
+.map-placeholder img{
+  height:50%;
+  width:50%;
+}
+.contact .contact-intro{
+  display:none;
+}
 /* Responsive adjustments for contact page layout */
 @media (max-width: 768px) {
   .contact-layout-flex {

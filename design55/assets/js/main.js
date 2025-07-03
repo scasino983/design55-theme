@@ -272,3 +272,20 @@ jQuery(function($) {
     }
   });
 });
+
+// Contact form loading GIF on submit (no disabling)
+jQuery(document).ready(function($) {
+  var gifPath = '/wp-content/themes/design55-theme/design55/assets/images/white.gif'; // Adjust if needed
+  $('.contact-form').on('submit', function(e) {
+    var $btn = $(this).find('input[type="submit"]');
+    var originalText = $btn.val();
+    $btn.val('Sending...');
+    if ($btn.next('.contact-loading-gif').length === 0) {
+      $('<img class="contact-loading-gif" src="' + gifPath + '" style="height:1.2em;vertical-align:middle;margin-left:0.5em;">').insertAfter($btn);
+    }
+    setTimeout(function() {
+      $btn.val(originalText);
+      $btn.next('.contact-loading-gif').remove();
+    }, 3000); // Remove GIF after 3s (adjust as needed)
+  });
+});

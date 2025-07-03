@@ -439,4 +439,102 @@ function design55_load_env() {
 // Load environment variables early
 add_action('init', 'design55_load_env', 1);
 
+
+
+
+
+/**
+ * Newsletter Signup: table creation, form handling, shortcode
+ */
+
+// 1) Create table on theme activation
+function ns_install_table() {
+    global $wpdb;
+    $table = $wpdb->prefix . 'newsletter_signups';
+    $charset = $wpdb->get_charset_collate();
+    $sql = "CREATE TABLE {$table} (
+        id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+        email VARCHAR(191)          NOT NULL,
+        date  DATETIME             NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY  (id),
+        UNIQUE KEY email (email)
+    ) {$charset};";
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+    dbDelta( $sql );
+}
+add_action( 'after_switch_theme', 'ns_install_table' );
+
+
+// 2) Handle form submission
+function ns_handle_post() {
+    if ( ! isset( $_POST['ns_signup_nonce'] ) ) {
+        return;
+    }
+    if ( ! wp_verify_nonce( $_POST['ns_signup_nonce'], 'ns_signup' ) ) {
+        return;
+    }
+    if ( empty( $_POST['ns_email'] ) || ! is_email( $_POST['ns_email'] ) ) {
+        wp_die( 'Please enter a valid email.' );
+    }
+
+    $email = sanitize_email( $_POST['ns_email'] );
+    global $wpdb;
+    $table = $wpdb->prefix . 'newsletter_signups';
+
+    // Insert or ignore if already exists
+    $wpdb->insert(
+        $table,
+        [ 'email' => $email ],
+        [ '%s' ]
+    );
+
+    // Send immediate auto‐response
+    $subject = "Thanks for signing up!";
+    $message = "Hi there,\n\nThank you for subscribing! We'll be in touch soon with our latest design tips and home-product favorites.\n\n– The Team";
+    wp_mail( $email, $subject, $message );
+
+    // Redirect to avoid resubmission
+    wp_safe_redirect( add_query_arg( 'ns_signup', 'success', wp_get_referer() ) );
+    exit;
+}
+add_action( 'init', 'ns_handle_post' );
+
+
+// 3) Shortcode to render the form
+function ns_render_form( $atts ) {
+    ob_start();
+    $success = isset( $_GET['ns_signup'] ) && $_GET['ns_signup'] === 'success';
+    ?>
+    <div class="ns-signup-wrapper">
+      <?php if ( $success ): ?>
+        <p class="ns-thanks">🎉 Thanks for signing up! Check your inbox.</p>
+      <?php endif; ?>
+
+      <h2>GET THE LATEST</h2>
+      <p class="ns-sub">…design tips, trends, and our favorite home products straight to your inbox!</p>
+
+      <form method="post" class="ns-form">
+        <?php wp_nonce_field( 'ns_signup', 'ns_signup_nonce' ); ?>
+        <input
+          type="email"
+          name="ns_email"
+          class="ns-input"
+          placeholder="Email Address"
+          required
+        />
+        <button type="submit" class="ns-submit">SIGN UP</button>
+      </form>
+
+      <div class="ns-social">
+        <a href="https://instagram.com/yourprofile" target="_blank" rel="noopener"><span class="dashicons dashicons-instagram"></span></a>
+        <a href="https://facebook.com/yourpage" target="_blank" rel="noopener"><span class="dashicons dashicons-facebook"></span></a>
+        <a href="https://pinterest.com/yourprofile" target="_blank" rel="noopener"><span class="dashicons dashicons-pinterest"></span></a>
+        <a href="https://medium.com/@yourprofile" target="_blank" rel="noopener"><span class="dashicons dashicons-edit"></span></a>
+      </div>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+add_shortcode( 'newsletter_signup', 'ns_render_form' );
+
 ?>
