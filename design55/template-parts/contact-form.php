@@ -12,12 +12,23 @@
     <h2>"We help turn transitions into transformations—one detail at a time."
     </h2>
 
- 
-      <a href="/contact" class="contact-button btn">
-        Let's Curate Your Dream Space <span class="arrow">→</span>
-      </a>
+    <a href="/contact" class="contact-button btn">
+      Let's Curate Your Dream Space <span class="arrow">→</span>
+    </a>
   </div>
-    <form class="contact-form" action="#" method="post"> <?php // Added action and method for basic functionality ?>
+  
+  <?php 
+  $contact_success = isset($_GET['contact_sent']) && $_GET['contact_sent'] === 'success';
+  ?>
+  
+  <?php if ($contact_success): ?>
+    <div class="contact-success-message">
+      <p><strong>Thank you!</strong> Your message has been sent successfully. We'll get back to you soon!</p>
+    </div>
+  <?php endif; ?>
+  
+    <form class="contact-form" action="" method="post">
+      <?php wp_nonce_field('contact_form_nonce', 'contact_nonce'); ?>
       <div class="form-row">
         <div class="form-group">
           <label for="cf-name">

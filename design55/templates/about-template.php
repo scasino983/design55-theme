@@ -69,5 +69,5 @@ get_header(); ?>
 
 </main><!-- #main-content -->
 <?php echo do_shortcode('[newsletter_signup]'); ?>
-<!-- <?php get_template_part('template-parts/contact-form'); ?> -->
+<!-- <?php //get_template_part('template-parts/contact-form'); ?> -->
 <?php get_footer(); ?>

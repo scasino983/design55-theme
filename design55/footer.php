@@ -87,12 +87,9 @@
             $("input[type='submit']").addClass('btn');
         });
     </script>
-    <button id="back-to-top" aria-label="Back to top" style="display:none;position:fixed;bottom:32px;right:32px;width:32px;height:32px;background:var(--accent-pink);border:none;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.12);z-index:2000;cursor:pointer;opacity:0;transition:opacity 0.3s;">
+    <button id="back-to-top" aria-label="Back to top" style="display:none;position:fixed;bottom:32px;right:32px;width:32px;height:25px;border:none;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.12);z-index:2000;cursor:pointer;opacity:0;transition:opacity 0.3s;">
         <!-- Replace the SVG below with your custom icon if desired -->
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="10" cy="10" r="10" fill="#fff" fill-opacity="0.2"/>
-            <path d="M10 15V5M10 5L5 10M10 5L15 10" stroke="var(--accent-pink)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+         <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/swirl.png'); ?>" alt="Back to top" style="width:100%;height:100%;border-radius:50%;">
     </button>
     <script>
         jQuery(document).ready(function($) {

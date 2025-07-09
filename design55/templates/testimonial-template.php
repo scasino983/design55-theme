@@ -35,6 +35,6 @@ get_header();
         </div>
     <?php endwhile; endif; ?>
 </main>
-<!-- <?php get_template_part('template-parts/contact-form'); ?> -->
+<?php //get_template_part('template-parts/contact-form'); ?>
 <?php echo do_shortcode('[newsletter_signup]'); ?>
 <?php get_footer(); ?>

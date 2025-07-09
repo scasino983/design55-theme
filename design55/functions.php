@@ -35,6 +35,16 @@ add_theme_support('post-thumbnails');
 add_theme_support('menus');
 register_nav_menus( array('main-menu' => __( 'Main Menu', 'design55' )));
 
+/**
+ * Add favicon to the site using icon-2.png from assets/images
+ */
+function design55_add_favicon() {
+    $favicon_url = get_template_directory_uri() . '/assets/images/icon-2.png';
+    echo '<link rel="icon" type="image/png" href="' . esc_url($favicon_url) . '">' . "\n";
+    echo '<link rel="shortcut icon" type="image/png" href="' . esc_url($favicon_url) . '">' . "\n";
+    echo '<link rel="apple-touch-icon" href="' . esc_url($favicon_url) . '">' . "\n";
+}
+add_action('wp_head', 'design55_add_favicon');
 
 
 
@@ -156,10 +166,13 @@ add_action('wp_footer', 'design55_add_newsletter_modal_to_footer');
 
 
 /**
- * Creates the newsletter subscribers table if it doesn't exist.
- * Should be called on theme activation.
+ * UNIFIED NEWSLETTER & CONTACT SYSTEM
+ * Consolidates all form submissions into a single database system
+ * Handles: Modal signup, shortcode signup, and contact form submissions
  */
-function design55_create_newsletter_table() {
+
+// Update the newsletter table structure to handle all submissions
+function design55_create_unified_subscribers_table() {
     global $wpdb;
     $table_name = $wpdb->prefix . 'newsletter_subscribers';
     $charset_collate = $wpdb->get_charset_collate();
@@ -168,13 +181,18 @@ function design55_create_newsletter_table() {
         id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
         name VARCHAR(255) NULL,
         email VARCHAR(255) NOT NULL,
+        phone VARCHAR(50) NULL,
+        message TEXT NULL,
         signup_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        status VARCHAR(20) NOT NULL DEFAULT 'subscribed', -- e.g., 'subscribed', 'unsubscribed', 'pending'
+        status VARCHAR(20) NOT NULL DEFAULT 'subscribed',
+        source VARCHAR(50) NOT NULL DEFAULT 'unknown', -- 'modal', 'shortcode', 'contact_form'
         unsubscribe_token VARCHAR(64) NULL,
-        ip_address VARCHAR(100) NULL, -- Increased length for IPv6
+        ip_address VARCHAR(100) NULL,
         PRIMARY KEY (id),
-        UNIQUE KEY email (email(191)), -- Added length for older MySQL versions with utf8mb4
-        KEY unsubscribe_token (unsubscribe_token)
+        UNIQUE KEY email (email(191)),
+        KEY unsubscribe_token (unsubscribe_token),
+        KEY source (source),
+        KEY status (status)
     ) $charset_collate;";
 
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -182,37 +200,29 @@ function design55_create_newsletter_table() {
 
     // Check if table exists after attempting to create it
     if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
-        // Log an error or notify admin if table creation failed
         error_log("Error creating newsletter subscribers table: $table_name");
-        // Optionally, add an admin notice
-        // add_action('admin_notices', function() use ($table_name) {
-        //     echo '<div class="notice notice-error"><p>Failed to create the newsletter subscribers table: ' . esc_html($table_name) . '. Please create it manually.</p></div>';
-        // });
+        add_action('admin_notices', function() use ($table_name) {
+            echo '<div class="notice notice-error"><p>Failed to create the newsletter subscribers table: ' . esc_html($table_name) . '. Please create it manually.</p></div>';
+        });
     }
 }
-// It's common to run this on theme activation.
-// add_action('after_switch_theme', 'design55_create_newsletter_table');
-// For development, you might want to call it directly once or via an admin hook if the theme is already active.
-// As an agent, I cannot rely on theme activation for an existing setup.
-// The user should be advised to either run the SQL manually or trigger this function once.
-// For now, I'll leave this function here and ensure it's called if not existing during AJAX.
 
+// Replace the old table creation function
+function design55_create_newsletter_table() {
+    design55_create_unified_subscribers_table();
+}
 
-/**
- * Handles the newsletter signup AJAX request.
- */
+// Unified newsletter signup handler (for AJAX)
 function design55_handle_newsletter_signup() {
     global $wpdb;
-    $table_name = $wp->prefix . 'newsletter_subscribers';
+    $table_name = $wpdb->prefix . 'newsletter_subscribers';
 
-    // Attempt to create table if it doesn't exist (good for robustness)
+    // Ensure table exists
+    design55_create_unified_subscribers_table();
+    
     if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
-        design55_create_newsletter_table();
-        // Check again, if still not there, something is wrong
-        if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
-            wp_send_json_error(['message' => 'Database table is missing and could not be created. Please contact support.']);
-            return;
-        }
+        wp_send_json_error(['message' => 'Database table is missing and could not be created. Please contact support.']);
+        return;
     }
 
     // Verify nonce
@@ -220,6 +230,7 @@ function design55_handle_newsletter_signup() {
 
     $email = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
     $name = isset($_POST['name']) ? sanitize_text_field($_POST['name']) : '';
+    $source = isset($_POST['source']) ? sanitize_text_field($_POST['source']) : 'modal';
     $ip_address = design55_get_user_ip();
 
     if (empty($email) || !is_email($email)) {
@@ -227,6 +238,7 @@ function design55_handle_newsletter_signup() {
         return;
     }
 
+    // Check for existing subscriber
     $existing_subscriber = $wpdb->get_row($wpdb->prepare(
         "SELECT * FROM $table_name WHERE email = %s",
         $email
@@ -237,25 +249,26 @@ function design55_handle_newsletter_signup() {
             wp_send_json_error(['message' => 'This email is already subscribed.']);
             return;
         } elseif ($existing_subscriber->status === 'unsubscribed') {
-            // Resubscribe: Update status and generate a new unsubscribe token
-            $unsubscribe_token = wp_generate_password(32, false); // Generate a simple token
+            // Resubscribe
+            $unsubscribe_token = wp_generate_password(32, false);
             $updated = $wpdb->update(
                 $table_name,
                 [
                     'status' => 'subscribed',
-                    'name' => $name ?: $existing_subscriber->name, // Keep old name if new one is empty
+                    'name' => $name ?: $existing_subscriber->name,
                     'unsubscribe_token' => $unsubscribe_token,
-                    'signup_date' => current_time('mysql', 1), // Update signup date to now (GMT)
+                    'signup_date' => current_time('mysql', 1),
+                    'source' => $source,
                     'ip_address' => $ip_address
                 ],
                 ['id' => $existing_subscriber->id],
-                ['%s', '%s', '%s', '%s', '%s'],
+                ['%s', '%s', '%s', '%s', '%s', '%s'],
                 ['%d']
             );
 
             if ($updated !== false) {
-                // TODO: Send welcome back / confirmation email
                 design55_send_newsletter_confirmation_email($email, $name, $unsubscribe_token);
+                design55_send_admin_notification($email, $name, 'Newsletter Resubscription', $source);
                 wp_send_json_success(['message' => 'You have been resubscribed! Welcome back.']);
             } else {
                 wp_send_json_error(['message' => 'Could not update subscription. Please try again.']);
@@ -272,23 +285,183 @@ function design55_handle_newsletter_signup() {
             'name' => $name,
             'email' => $email,
             'status' => 'subscribed',
+            'source' => $source,
             'unsubscribe_token' => $unsubscribe_token,
             'ip_address' => $ip_address,
-            'signup_date' => current_time('mysql', 1) // GMT
+            'signup_date' => current_time('mysql', 1)
         ],
-        ['%s', '%s', '%s', '%s', '%s', '%s']
+        ['%s', '%s', '%s', '%s', '%s', '%s', '%s']
     );
 
     if ($inserted) {
-        // TODO: Send welcome / confirmation email
         design55_send_newsletter_confirmation_email($email, $name, $unsubscribe_token);
+        design55_send_admin_notification($email, $name, 'Newsletter Signup', $source);
         wp_send_json_success(['message' => 'Thank you for subscribing! Please check your email for a confirmation.']);
     } else {
         wp_send_json_error(['message' => 'Could not subscribe. Please try again. Database error.']);
     }
 }
+
+// Contact form handler
+function design55_handle_contact_form() {
+    // Only process if this is a contact form submission
+    if (!isset($_POST['contact_nonce']) || !isset($_POST['cf-name'])) {
+        return;
+    }
+    
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'newsletter_subscribers';
+
+    // Ensure table exists
+    design55_create_unified_subscribers_table();
+
+    // Verify nonce for contact form
+    if (!wp_verify_nonce($_POST['contact_nonce'], 'contact_form_nonce')) {
+        wp_die('Security check failed. Please try again.');
+    }
+
+    $name = isset($_POST['cf-name']) ? sanitize_text_field($_POST['cf-name']) : '';
+    $email = isset($_POST['cf-email']) ? sanitize_email($_POST['cf-email']) : '';
+    $phone = isset($_POST['cf-phone']) ? sanitize_text_field($_POST['cf-phone']) : '';
+    $message = isset($_POST['cf-message']) ? sanitize_textarea_field($_POST['cf-message']) : '';
+    $newsletter_optin = isset($_POST['cf-newsletter']) ? true : false;
+    $ip_address = design55_get_user_ip();
+
+    // Validate required fields
+    if (empty($name) || empty($email) || !is_email($email)) {
+        wp_die('Please fill in all required fields with valid information.');
+    }
+
+    // Send contact form email to admin
+    design55_send_contact_form_email($name, $email, $phone, $message);
+
+    // Handle newsletter signup if opted in
+    if ($newsletter_optin) {
+        $existing_subscriber = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM $table_name WHERE email = %s",
+            $email
+        ));
+
+        if (!$existing_subscriber) {
+            // New subscriber via contact form
+            $unsubscribe_token = wp_generate_password(32, false);
+            $wpdb->insert(
+                $table_name,
+                [
+                    'name' => $name,
+                    'email' => $email,
+                    'phone' => $phone,
+                    'message' => $message,
+                    'status' => 'subscribed',
+                    'source' => 'contact_form',
+                    'unsubscribe_token' => $unsubscribe_token,
+                    'ip_address' => $ip_address,
+                    'signup_date' => current_time('mysql', 1)
+                ],
+                ['%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s']
+            );
+            design55_send_newsletter_confirmation_email($email, $name, $unsubscribe_token);
+        } elseif ($existing_subscriber->status === 'unsubscribed') {
+            // Resubscribe via contact form
+            $unsubscribe_token = wp_generate_password(32, false);
+            $wpdb->update(
+                $table_name,
+                [
+                    'status' => 'subscribed',
+                    'name' => $name,
+                    'phone' => $phone,
+                    'message' => $message,
+                    'unsubscribe_token' => $unsubscribe_token,
+                    'signup_date' => current_time('mysql', 1),
+                    'source' => 'contact_form',
+                    'ip_address' => $ip_address
+                ],
+                ['id' => $existing_subscriber->id],
+                ['%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s'],
+                ['%d']
+            );
+            design55_send_newsletter_confirmation_email($email, $name, $unsubscribe_token);
+        }
+    }
+
+    // Redirect with success message
+    wp_safe_redirect(add_query_arg('contact_sent', 'success', wp_get_referer()));
+    exit;
+}
+
+// Simple newsletter signup handler (for shortcode forms)
+function design55_handle_simple_newsletter_signup() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'newsletter_subscribers';
+
+    if (!isset($_POST['ns_signup_nonce']) || !wp_verify_nonce($_POST['ns_signup_nonce'], 'ns_signup')) {
+        return;
+    }
+
+    if (empty($_POST['ns_email']) || !is_email($_POST['ns_email'])) {
+        wp_die('Please enter a valid email.');
+    }
+
+    $email = sanitize_email($_POST['ns_email']);
+    $ip_address = design55_get_user_ip();
+
+    // Ensure table exists
+    design55_create_unified_subscribers_table();
+
+    // Check for existing subscriber
+    $existing_subscriber = $wpdb->get_row($wpdb->prepare(
+        "SELECT * FROM $table_name WHERE email = %s",
+        $email
+    ));
+
+    if (!$existing_subscriber) {
+        // New subscriber
+        $unsubscribe_token = wp_generate_password(32, false);
+        $wpdb->insert(
+            $table_name,
+            [
+                'email' => $email,
+                'status' => 'subscribed',
+                'source' => 'shortcode',
+                'unsubscribe_token' => $unsubscribe_token,
+                'ip_address' => $ip_address,
+                'signup_date' => current_time('mysql', 1)
+            ],
+            ['%s', '%s', '%s', '%s', '%s', '%s']
+        );
+        design55_send_newsletter_confirmation_email($email, '', $unsubscribe_token);
+        design55_send_admin_notification($email, '', 'Newsletter Signup', 'shortcode');
+    } elseif ($existing_subscriber->status === 'unsubscribed') {
+        // Resubscribe
+        $unsubscribe_token = wp_generate_password(32, false);
+        $wpdb->update(
+            $table_name,
+            [
+                'status' => 'subscribed',
+                'unsubscribe_token' => $unsubscribe_token,
+                'signup_date' => current_time('mysql', 1),
+                'source' => 'shortcode',
+                'ip_address' => $ip_address
+            ],
+            ['id' => $existing_subscriber->id],
+            ['%s', '%s', '%s', '%s', '%s'],
+            ['%d']
+        );
+        design55_send_newsletter_confirmation_email($email, $existing_subscriber->name ?: '', $unsubscribe_token);
+        design55_send_admin_notification($email, $existing_subscriber->name ?: '', 'Newsletter Resubscription', 'shortcode');
+    }
+
+    wp_safe_redirect(add_query_arg('ns_signup', 'success', wp_get_referer()));
+    exit;
+}
+// Register all form handlers
 add_action('wp_ajax_newsletter_signup', 'design55_handle_newsletter_signup');
 add_action('wp_ajax_nopriv_newsletter_signup', 'design55_handle_newsletter_signup');
+add_action('init', 'design55_handle_simple_newsletter_signup');
+add_action('init', 'design55_handle_contact_form');
+
+// Create table on theme activation
+add_action('after_switch_theme', 'design55_create_unified_subscribers_table');
 
 /**
  * Helper function to get user IP address.
@@ -319,7 +492,7 @@ function design55_send_newsletter_confirmation_email($email, $name, $token) {
         'action' => 'design55_unsubscribe',
         'email' => rawurlencode($email),
         'token' => $token
-    ], site_url('/')); // Using site_url('/') for a cleaner base for the unsubscribe link
+    ], site_url('/'));
 
     $message_lines = [
         "Hi " . $user_name_display . ",",
@@ -337,12 +510,78 @@ function design55_send_newsletter_confirmation_email($email, $name, $token) {
     $message = implode("\r\n", $message_lines);
 
     $headers = ['Content-Type: text/plain; charset=UTF-8'];
-    // Add From header if you have specific requirements, otherwise WP default is used.
-    // $site_email = get_option('admin_email');
-    // $headers[] = 'From: ' . get_bloginfo('name') . ' <' . $site_email . '>';
-
-    // Ensure SMTP is configured by the user as per previous discussions.
     wp_mail($email, $subject, $message, $headers);
+}
+
+/**
+ * Sends admin notification for new signups/contacts
+ *
+ * @param string $email User's email.
+ * @param string $name User's name.
+ * @param string $type Type of notification.
+ * @param string $source Source of signup.
+ */
+function design55_send_admin_notification($email, $name, $type, $source) {
+    $admin_email = get_option('admin_email');
+    $site_name = get_bloginfo('name');
+    
+    $subject = $site_name . ' - ' . $type . ' (' . ucfirst($source) . ')';
+    
+    $message_lines = [
+        "New " . strtolower($type) . " on " . $site_name,
+        "",
+        "Details:",
+        "Name: " . ($name ?: 'Not provided'),
+        "Email: " . $email,
+        "Source: " . ucfirst($source),
+        "Date: " . current_time('F j, Y g:i a'),
+        "",
+        "View all subscribers in your WordPress admin area."
+    ];
+    
+    $message = implode("\r\n", $message_lines);
+    $headers = ['Content-Type: text/plain; charset=UTF-8'];
+    
+    wp_mail($admin_email, $subject, $message, $headers);
+}
+
+/**
+ * Sends contact form email to admin
+ *
+ * @param string $name User's name.
+ * @param string $email User's email.
+ * @param string $phone User's phone.
+ * @param string $message User's message.
+ */
+function design55_send_contact_form_email($name, $email, $phone, $message) {
+    $admin_email = get_option('admin_email');
+    $site_name = get_bloginfo('name');
+    
+    $subject = $site_name . ' - New Contact Form Submission';
+    
+    $email_body = [
+        "New contact form submission from " . $site_name,
+        "",
+        "Contact Details:",
+        "Name: " . $name,
+        "Email: " . $email,
+        "Phone: " . ($phone ?: 'Not provided'),
+        "",
+        "Message:",
+        $message,
+        "",
+        "Date: " . current_time('F j, Y g:i a'),
+        "",
+        "Reply directly to this email to respond to the inquiry."
+    ];
+    
+    $email_content = implode("\r\n", $email_body);
+    $headers = [
+        'Content-Type: text/plain; charset=UTF-8',
+        'Reply-To: ' . $name . ' <' . $email . '>'
+    ];
+    
+    wp_mail($admin_email, $subject, $email_content, $headers);
 }
 
 /**
@@ -444,97 +683,93 @@ add_action('init', 'design55_load_env', 1);
 
 
 /**
- * Newsletter Signup: table creation, form handling, shortcode
+ * Add CORS headers for development and testing
+ * WARNING: These are permissive settings for development only!
+ * For production, restrict the Access-Control-Allow-Origin to specific domains.
  */
-
-// 1) Create table on theme activation
-function ns_install_table() {
-    global $wpdb;
-    $table = $wpdb->prefix . 'newsletter_signups';
-    $charset = $wpdb->get_charset_collate();
-    $sql = "CREATE TABLE {$table} (
-        id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-        email VARCHAR(191)          NOT NULL,
-        date  DATETIME             NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY  (id),
-        UNIQUE KEY email (email)
-    ) {$charset};";
-    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-    dbDelta( $sql );
+function design55_add_cors_headers() {
+    // Allow requests from any origin (development only)
+    header('Access-Control-Allow-Origin: *');
+    
+    // Allow specific HTTP methods
+    header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE, PATCH');
+    
+    // Allow specific headers
+    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, X-WP-Nonce');
+    
+    // Allow credentials to be sent with requests
+    header('Access-Control-Allow-Credentials: true');
+    
+    // Set max age for preflight requests (24 hours)
+    header('Access-Control-Max-Age: 86400');
+    
+    // Handle preflight OPTIONS requests
+    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        // Return 200 status for OPTIONS requests
+        status_header(200);
+        exit();
+    }
 }
-add_action( 'after_switch_theme', 'ns_install_table' );
+// Add CORS headers early in the process
+add_action('init', 'design55_add_cors_headers', 0);
 
+// Also add CORS headers specifically for AJAX requests
+add_action('wp_ajax_newsletter_signup', 'design55_add_ajax_cors_headers', 1);
+add_action('wp_ajax_nopriv_newsletter_signup', 'design55_add_ajax_cors_headers', 1);
 
-// 2) Handle form submission
-function ns_handle_post() {
-    if ( ! isset( $_POST['ns_signup_nonce'] ) ) {
-        return;
-    }
-    if ( ! wp_verify_nonce( $_POST['ns_signup_nonce'], 'ns_signup' ) ) {
-        return;
-    }
-    if ( empty( $_POST['ns_email'] ) || ! is_email( $_POST['ns_email'] ) ) {
-        wp_die( 'Please enter a valid email.' );
-    }
-
-    $email = sanitize_email( $_POST['ns_email'] );
-    global $wpdb;
-    $table = $wpdb->prefix . 'newsletter_signups';
-
-    // Insert or ignore if already exists
-    $wpdb->insert(
-        $table,
-        [ 'email' => $email ],
-        [ '%s' ]
-    );
-
-    // Send immediate auto‐response
-    $subject = "Thanks for signing up!";
-    $message = "Hi there,\n\nThank you for subscribing! We'll be in touch soon with our latest design tips and home-product favorites.\n\n– The Team";
-    wp_mail( $email, $subject, $message );
-
-    // Redirect to avoid resubmission
-    wp_safe_redirect( add_query_arg( 'ns_signup', 'success', wp_get_referer() ) );
-    exit;
+function design55_add_ajax_cors_headers() {
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, X-WP-Nonce');
+    header('Access-Control-Allow-Credentials: true');
 }
-add_action( 'init', 'ns_handle_post' );
 
 
-// 3) Shortcode to render the form
-function ns_render_form( $atts ) {
+/**
+ * Updated newsletter signup shortcode - now uses unified system
+ */
+function design55_render_newsletter_form($atts) {
     ob_start();
-    $success = isset( $_GET['ns_signup'] ) && $_GET['ns_signup'] === 'success';
+    $success = isset($_GET['ns_signup']) && $_GET['ns_signup'] === 'success';
     ?>
     <div class="ns-signup-wrapper">
-      <?php if ( $success ): ?>
-        <p class="ns-thanks">🎉 Thanks for signing up! Check your inbox.</p>
-      <?php endif; ?>
+        <?php if ($success): ?>
+            <p class="ns-thanks">🎉 Thanks for signing up! Check your inbox for confirmation.</p>
+        <?php endif; ?>
 
-      <h2>GET THE LATEST</h2>
-      <p class="ns-sub">…design tips, trends, and our favorite home products straight to your inbox!</p>
+        <h2>GET THE LATEST</h2>
+        <p class="ns-sub">…design tips, trends, and our favorite home products straight to your inbox!</p>
 
-      <form method="post" class="ns-form">
-        <?php wp_nonce_field( 'ns_signup', 'ns_signup_nonce' ); ?>
-        <input
-          type="email"
-          name="ns_email"
-          class="ns-input"
-          placeholder="Email Address"
-          required
-        />
-        <button type="submit" class="ns-submit">SIGN UP</button>
-      </form>
+        <form method="post" class="ns-form">
+            <?php wp_nonce_field('ns_signup', 'ns_signup_nonce'); ?>
+            <input
+                type="email"
+                name="ns_email"
+                class="ns-input"
+                placeholder="Email Address"
+                required
+            />
+            <button type="submit" class="ns-submit">SIGN UP</button>
+        </form>
 
-      <div class="ns-social">
-        <a href="https://instagram.com/yourprofile" target="_blank" rel="noopener"><span class="dashicons dashicons-instagram"></span></a>
-        <a href="https://facebook.com/yourpage" target="_blank" rel="noopener"><span class="dashicons dashicons-facebook"></span></a>
-        <a href="https://pinterest.com/yourprofile" target="_blank" rel="noopener"><span class="dashicons dashicons-pinterest"></span></a>
-        <a href="https://medium.com/@yourprofile" target="_blank" rel="noopener"><span class="dashicons dashicons-edit"></span></a>
-      </div>
+        <div class="ns-social">
+            <a href="https://instagram.com/yourprofile" target="_blank" rel="noopener">
+                <span class="dashicons dashicons-instagram"></span>
+            </a>
+            <a href="https://facebook.com/yourpage" target="_blank" rel="noopener">
+                <span class="dashicons dashicons-facebook"></span>
+            </a>
+            <a href="https://pinterest.com/yourprofile" target="_blank" rel="noopener">
+                <span class="dashicons dashicons-pinterest"></span>
+            </a>
+            <a href="https://medium.com/@yourprofile" target="_blank" rel="noopener">
+                <span class="dashicons dashicons-edit"></span>
+            </a>
+        </div>
     </div>
     <?php
     return ob_get_clean();
 }
-add_shortcode( 'newsletter_signup', 'ns_render_form' );
+add_shortcode('newsletter_signup', 'design55_render_newsletter_form');
 
 ?>
